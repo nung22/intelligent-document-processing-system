@@ -19,7 +19,7 @@ The system utilizes an event-driven microservices architecture powered by AWS CD
 
 ### Diagram
 
-Data flow for the serverless, event-driven architecture of the Intelligent Document Processing (IDP) system.
+Data flow for the IDP system.
 
 ```text
 [User] 
