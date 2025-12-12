@@ -17,6 +17,46 @@ The system utilizes an event-driven microservices architecture powered by AWS CD
 5. **Validation**: The **Validator Lambda** also subscribes to the SNS topic. It checks if the invoice total exceeds a configured threshold ($1,000.00). If so, it publishes an alert to a separate **Alerts SNS Topic**.
 6. **API Layer**: An **API Gateway** backed by a Lambda function serves the frontend, providing endpoints to fetch invoice lists and generate secure upload URLs.
 
+### Diagram
+
+Data flow for the serverless, event-driven architecture of the Intelligent Document Processing (IDP) system.
+
+```text
+[User] 
+  |
+  v
+[Frontend (Vue.js)] 
+  |
+  +---(1. Get Upload URL / List Invoices)----> [API Gateway] 
+  |                                                 |
+  |                                                 v
+  |                                          [API-Service Lambda] <-----> [DynamoDB]
+  |                                                 |
+  +---(2. Direct Upload)---------------------> [S3 Bucket]
+                                                    |
+                                                    | (3. Object Created Event)
+                                                    v
+                                           [Processor-Service]
+                                           (Simulated Extraction)
+                                                    |
+                                                    | (4. Publish Event)
+                                                    v
+                                         [SNS Topic: InvoiceEvents]
+                                                    |
+                                      +-------------+-------------+
+                                      |                           |
+                                      | (Fanout)                  | (Fanout)
+                                      v                           v
+                             [Persistor-Service]          [Validator-Service]
+                                      |                           |
+                                      | (5. Save)                 | (6. Check Total > $1000)
+                                      v                           v
+                                  [DynamoDB]              [SNS Topic: Alerts]
+                                                                  |
+                                                                  v
+                                                          [Email Notification]
+```
+
 ## Technology Stack
 
 - **Infrastructure as Code**: AWS CDK (TypeScript)
