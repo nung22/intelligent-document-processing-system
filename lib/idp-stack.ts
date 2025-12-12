@@ -47,7 +47,10 @@ export class IdpInfrastructureStack extends cdk.Stack {
       displayName: 'High Value Invoice Alerts',
     });
     
-    this.alertsTopic.addSubscription(new subscriptions.EmailSubscription('ung.n@northeastern.edu'));
+    const email = process.env.NOTIFICATION_EMAIL;
+    if (!email) throw new Error("Please set NOTIFICATION_EMAIL in your .env file");
+    
+    this.alertsTopic.addSubscription(new subscriptions.EmailSubscription(email));
 
     new cdk.CfnOutput(this, 'BucketName', { value: this.invoiceBucket.bucketName });
     new cdk.CfnOutput(this, 'TableName', { value: this.invoiceTable.tableName });

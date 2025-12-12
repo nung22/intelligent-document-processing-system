@@ -59,9 +59,19 @@ yarn cdk deploy
 
 **Important**: During deployment, you will see a list of Outputs in your terminal. Copy the value of `IdpInfrastructureStack.ApiUrl` (e.g., `https://xxxxx.execute-api.us-east-1.amazonaws.com/prod/`). You will need this for the frontend configuration.
 
-### 3. Configure the Frontend
+### 3. Configure the Environment Variables
 
-Navigate to the frontend directory and configure the environment variables.
+Set the desired email address to receive notifications.
+```bash
+touch .env
+```
+
+Open `.env` and add the email address you wish to receive alerts at:
+```
+NOTIFICATION_EMAIL=''name@example.com'
+```
+
+Navigate to the frontend directory and configure the Api URL.
 ```bash
 cd frontend
 touch .env
